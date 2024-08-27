@@ -75,6 +75,14 @@ prediction = model.predict([15])
 puts prediction # Output: [27]
 ```
 
+### Benchmark
+
+To check the Ruby implementation, run the Python benchmark using the same data:
+
+```
+$ python benchmarks/simple_linear_regression_benchmark.py
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
