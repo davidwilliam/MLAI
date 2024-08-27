@@ -253,6 +253,22 @@ To check the Ruby implementation, run the Python benchmark using the same data:
 $ python3 benchmarks/multiple_linear_regression.py
 ```
 
+#### Example
+
+Here is an example closer to the real world. Imagine you work at a car dealership, and you want to predict the price of used cars based on various features such as the car's age, mileage, and horsepower. You have collected data from previous sales and want to use this data to predict the price of new cars based on these features.
+
+You can run this example here:
+
+```
+ruby examples/car_price_prediction.rb
+```
+
+and check the results with the following benchmark in Python:
+
+```
+python3 benchmarks/car_price_prediction_benchmark.py
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
