@@ -2,12 +2,8 @@
 
 require "test_helper"
 
-class TestMlAi < Minitest::Test
+class TestMLAI < Minitest::Test
   def test_that_it_has_a_version_number
-    refute_nil ::MlAi::VERSION
-  end
-
-  def test_it_does_something_useful
-    assert false
+    refute_nil ::MLAI::VERSION
   end
 end

@@ -4,7 +4,7 @@ require_relative "lib/ml_ai/version"
 
 Gem::Specification.new do |spec|
   spec.name = "ml_ai"
-  spec.version = MlAi::VERSION
+  spec.version = MLAI::VERSION
   spec.authors = ["David William Silva"]
   spec.email = ["contact@davidwsilva.com"]
 

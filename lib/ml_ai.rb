@@ -2,7 +2,7 @@
 
 require_relative "ml_ai/version"
 
-module MlAi
+module MLAI
   class Error < StandardError; end
   # Your code goes here...
 end
