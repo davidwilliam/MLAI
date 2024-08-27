@@ -14,6 +14,22 @@ Then why? I could name several reasons, but it will all come down to my interest
 
 Plus, it is a lot of fun! 
 
+## Observations on Benchmarking
+
+Using the `scikit-learn` library in Python as a reference (and also to keep this Ruby implementation in check), allowed me to arrive at some interesting observations.
+
+### Intermediary Results
+
+Throughout the development process, a series of cases were encountered where intermediary computations—such as matrix operations and inversions—differed between the two implementations, sometimes significantly. However, these differences often had no impact on the final results, such as predictions, mean squared error (MSE), or R-squared values. The underlying reason for this lies in how numerical computations are handled in each language.
+
+### Language-Specific Matrix Computations and Precision Matters
+
+First, the way matrices are computed and inverted can vary between Ruby and Python, especially considering the libraries and methods used. Differences in how these operations are optimized and executed can lead to slight variations in intermediate results. Additionally, floating-point arithmetic is handled differently in each language, influenced by factors such as precision, rounding methods, and how numbers are represented internally. Ruby and Python might employ distinct strategies to manage these computations, leading to the observed differences.
+
+### Theory vs Practice
+
+These differences highlight the importance of understanding that while numerical algorithms are deterministic in theory, their practical implementations can introduce variability due to the intricacies of the programming languages and their respective libraries. Despite these variations, the ability of both implementations to yield virtually identical final results speaks the robustness of the underlying mathematical principles. This also emphasizes the value of cross-referencing implementations in different environments to ensure the reliability and accuracy of the models developed. By the way, one more reason for writing a new ML/AI llibrary in Ruby. :) 
+
 ## Installation
 
 Run:
