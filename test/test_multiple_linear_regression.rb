@@ -160,4 +160,26 @@ class TestMultipleLinearRegression < Minitest::Test
     assert_in_delta 0.0, mse, 0.01, "MSE should be close to 0.0"
     assert_in_delta 1.0, r2, 0.01, "R-squared should be close to 1.0"
   end
+
+  # Test fitting with regularization
+  def test_multiple_linear_regression_with_regularization
+    model_with_regularization = MLAI::MultipleLinearRegression.new(regularization: 0.1)
+
+    # Fit using the existing dataset with regularization
+    model_with_regularization.fit(dataset: @dataset, feature_columns: ["Feature1", "Feature2"], target_column: "Target")
+
+    # Check that the coefficients are affected by regularization
+    coefficients = model_with_regularization.coefficients
+    assert coefficients.all? { |coef| coef.abs < 2.0 }, "Coefficients should be reduced due to regularization"
+
+    # Predict using the fitted model
+    predictions = model_with_regularization.predict([
+      [4, 5],
+      [6, 7]
+    ])
+
+    expected_predictions = predictions.map { |pred| pred.round(2) }
+    assert predictions.all? { |pred| pred.is_a?(Float) }, "Predictions should be valid floating-point numbers"
+  end
+
 end

@@ -281,6 +281,63 @@ and check the results with the following benchmark in Python:
 python3 benchmarks/car_price_prediction_benchmark.py
 ```
 
+### Regularization
+
+Regularization helps prevent overfitting by adding a penalty to large coefficients, making the model more generalizable. In this example, we'll predict advertising revenue based on the amount spent on TV, radio, and newspaper advertisements. Regularization is applied to prevent overfitting and ensure the model generalizes well to new data.
+
+```ruby
+# frozen_string_literal: true
+
+# Example: Predicting Advertising Revenue with Regularization
+
+require_relative '../lib/ml_ai'
+
+# Initialize the model with a regularization parameter
+model = MLAI::MultipleLinearRegression.new(regularization: 0.00083)
+
+# Create a Dataset from a CSV file
+dataset = MLAI::Dataset.new('data/advertising_revenue.csv')
+
+# Fit the model using the Dataset
+model.fit(dataset: dataset, feature_columns: ['TV', 'Radio', 'Newspaper'], target_column: 'Revenue')
+
+# Print coefficients and intercept
+puts "Coefficients: #{model.coefficients.map { |coef| coef.round(2) }}"
+puts "Intercept: #{model.intercept.round(2)}"
+
+# Predict the revenue based on new advertising spends
+new_ad_spend = [[230, 37, 69]] # TV: $230, Radio: $37, Newspaper: $69
+predicted_revenue = model.predict(new_ad_spend).first.round(2)
+puts "Predicted Advertising Revenue: $#{predicted_revenue}"
+
+# Evaluate the model using the original dataset
+original_features = dataset.data.map { |row| row[0..2] } # Extracting 'TV', 'Radio', 'Newspaper'
+original_revenue = dataset.data.map { |row| row[3] } # Extracting 'Revenue'
+predictions = model.predict(original_features).map { |p| p.round(2) }
+
+mse = model.mean_squared_error(original_revenue, predictions).round(2)
+r2 = model.r_squared(original_revenue, predictions).round(2)
+
+puts "Mean Squared Error: #{mse}"
+puts "R-squared: #{r2}"
+```
+
+#### Example
+
+Here is an example closer to the real world. Imagine you're working for a company that wants to predict the salary of employees based on several factors, including their years of experience, level of education, and number of relevant skills. You have collected data from existing employees and want to use this data to predict salaries for new hires.
+
+You can run this example here:
+
+```
+ruby examples/employee_salary_prediction.rb
+```
+
+and check the results with the following benchmark in Python:
+
+```
+python3 benchmarks/employee_salary_prediction_benchmark.py
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

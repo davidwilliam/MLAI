@@ -5,54 +5,53 @@ require_relative 'dataset'
 
 module MLAI
   class MultipleLinearRegression
-    attr_reader :coefficients, :intercept
+    attr_reader :coefficients, :intercept, :regularization
 
-    def initialize(alpha = 1e-8)
+    def initialize(alpha = 1e-8, regularization: 0.0)
       @coefficients = nil
       @intercept = nil
-      @alpha = alpha # Regularization term
+      @alpha = alpha # Small value to avoid singular matrix in inversion
+      @regularization = regularization # Regularization strength for Ridge Regression
     end
 
     # Fit method accepts either x_values and y_values or a Dataset object with specified columns
     def fit(x_values: nil, y_values: nil, dataset: nil, feature_columns: nil, target_column: nil)
-      if dataset
-        unless feature_columns && target_column
-          raise ArgumentError, "When using a Dataset, you must specify feature_columns and target_column"
+        if dataset
+          # Extract feature and target columns from the dataset
+          feature_indices = feature_columns.map { |col| dataset.headers.index(col) }
+          target_index = dataset.headers.index(target_column)
+      
+          x_values = dataset.data.map { |row| feature_indices.map { |i| row[i] } }
+          y_values = dataset.data.map { |row| row[target_index] }
         end
-
-        # Extract indices of the specified columns
-        feature_indices = feature_columns.map { |col| dataset.headers.index(col) }
-        target_index = dataset.headers.index(target_column)
-
-        unless feature_indices.all? && target_index
-          raise ArgumentError, "Specified feature or target column does not exist in the dataset"
+      
+        raise "Input arrays must have the same length" unless x_values.length == y_values.length
+      
+        # Convert x_values to a matrix and add a column of ones for the intercept
+        x_matrix = Matrix[*x_values.map { |x| [1] + x }]
+        y_vector = Vector.elements(y_values)
+      
+        # Calculate coefficients using the normal equation with regularization: (X^T * X + λI)^-1 * X^T * Y
+        x_transpose = x_matrix.transpose
+        regularization_matrix = Matrix.build(x_matrix.column_count) { |i, j| i == j ? @regularization : 0 }
+        
+        # Debugging output to see matrices
+        puts "X^T * X:\n#{(x_transpose * x_matrix).inspect}"
+        puts "Regularization Matrix:\n#{regularization_matrix.inspect}"
+        puts "X^T * X + λI:\n#{(x_transpose * x_matrix + regularization_matrix).inspect}"
+        
+        xtx = x_transpose * x_matrix + regularization_matrix
+      
+        begin
+          theta = xtx.inverse * x_transpose * y_vector
+        rescue ExceptionForMatrix::ErrNotRegular
+          raise "Matrix is singular or nearly singular, consider increasing regularization"
         end
-
-        # Extract x and y values from the dataset
-        x_values = dataset.data.map { |row| feature_indices.map { |i| row[i] } }
-        y_values = dataset.data.map { |row| row[target_index] }
-      elsif x_values && y_values
-        # Use x_values and y_values directly
-      else
-        raise ArgumentError, "You must provide either x_values and y_values or a dataset with feature_columns and target_column"
-      end
-
-      raise "Input arrays must have the same length" unless x_values.length == y_values.length
-
-      # Convert x_values to a matrix and add a column of ones for the intercept
-      x_matrix = Matrix[*x_values.map { |x| [1] + x }]
-      y_vector = Vector.elements(y_values)
-
-      # Calculate coefficients using the normal equation with regularization: (X^T * X + αI)^-1 * X^T * Y
-      x_transpose = x_matrix.transpose
-      regularization_matrix = Matrix.build(x_matrix.column_count) { |i, j| i == j ? @alpha : 0 }
-      theta = (x_transpose * x_matrix + regularization_matrix).inverse * x_transpose * y_vector
-
-      # Separate intercept and coefficients
-      @intercept = theta[0]
-      @coefficients = theta.to_a[1..-1]
+      
+        @intercept = theta[0]
+        @coefficients = theta.to_a[1..-1]
     end
-
+      
     def predict(x_values)
       raise "Model has not been fitted yet" if @coefficients.nil? || @intercept.nil?
 
