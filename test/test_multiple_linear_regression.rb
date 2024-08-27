@@ -185,4 +185,25 @@ class TestMultipleLinearRegression < Minitest::Test
     assert predictions.all? { |pred| pred.is_a?(Float) }, "Predictions should be valid floating-point numbers"
   end
 
+  # Test cross-validation with raw arrays
+  def test_cross_validation_with_arrays
+    x_values = [
+      [1, 2],
+      [2, 3],
+      [3, 4],
+      [4, 5],
+      [5, 6]
+    ]
+    y_values = [5, 7, 9, 11, 13]
+
+    average_mse = @model.cross_validate(x_values: x_values, y_values: y_values, k: 3)
+    assert_in_delta 0.0, average_mse, 0.01, "Average MSE across folds should be close to 0.0"
+  end
+
+  # Test cross-validation with a Dataset object
+  def test_cross_validation_with_dataset
+    average_mse = @model.cross_validate(dataset: @dataset, feature_columns: ["Feature1", "Feature2"], target_column: "Target", k: 3)
+    assert_in_delta 0.0, average_mse, 0.01, "Average MSE across folds should be close to 0.0"
+  end
+
 end

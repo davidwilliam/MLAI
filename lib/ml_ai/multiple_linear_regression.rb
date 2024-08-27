@@ -16,37 +16,37 @@ module MLAI
 
     # Fit method accepts either x_values and y_values or a Dataset object with specified columns
     def fit(x_values: nil, y_values: nil, dataset: nil, feature_columns: nil, target_column: nil)
-        if dataset
-          # Extract feature and target columns from the dataset
-          feature_indices = feature_columns.map { |col| dataset.headers.index(col) }
-          target_index = dataset.headers.index(target_column)
+      if dataset
+        # Extract feature and target columns from the dataset
+        feature_indices = feature_columns.map { |col| dataset.headers.index(col) }
+        target_index = dataset.headers.index(target_column)
+    
+        x_values = dataset.data.map { |row| feature_indices.map { |i| row[i] } }
+        y_values = dataset.data.map { |row| row[target_index] }
+      end
+    
+      raise "Input arrays must have the same length" unless x_values.length == y_values.length
+    
+      # Convert x_values to a matrix and add a column of ones for the intercept
+      x_matrix = Matrix[*x_values.map { |x| [1] + x }]
+      y_vector = Vector.elements(y_values)
+    
+      # Calculate coefficients using the normal equation with regularization: (X^T * X + λI)^-1 * X^T * Y
+      x_transpose = x_matrix.transpose
+      regularization_matrix = Matrix.build(x_matrix.column_count) { |i, j| i == j ? @regularization : 0 }
       
-          x_values = dataset.data.map { |row| feature_indices.map { |i| row[i] } }
-          y_values = dataset.data.map { |row| row[target_index] }
-        end
-      
-        raise "Input arrays must have the same length" unless x_values.length == y_values.length
-      
-        # Convert x_values to a matrix and add a column of ones for the intercept
-        x_matrix = Matrix[*x_values.map { |x| [1] + x }]
-        y_vector = Vector.elements(y_values)
-      
-        # Calculate coefficients using the normal equation with regularization: (X^T * X + λI)^-1 * X^T * Y
-        x_transpose = x_matrix.transpose
-        regularization_matrix = Matrix.build(x_matrix.column_count) { |i, j| i == j ? @regularization : 0 }
-        
-        xtx = x_transpose * x_matrix + regularization_matrix
-      
-        begin
-          theta = xtx.inverse * x_transpose * y_vector
-        rescue ExceptionForMatrix::ErrNotRegular
-          raise "Matrix is singular or nearly singular, consider increasing regularization"
-        end
-      
-        @intercept = theta[0]
-        @coefficients = theta.to_a[1..-1]
+      xtx = x_transpose * x_matrix + regularization_matrix
+    
+      begin
+        theta = xtx.inverse * x_transpose * y_vector
+      rescue ExceptionForMatrix::ErrNotRegular
+        raise "Matrix is singular or nearly singular, consider increasing regularization"
+      end
+    
+      @intercept = theta[0]
+      @coefficients = theta.to_a[1..-1]
     end
-      
+    
     def predict(x_values)
       raise "Model has not been fitted yet" if @coefficients.nil? || @intercept.nil?
 
@@ -73,6 +73,41 @@ module MLAI
       ss_residual = y_true.each_with_index.map { |y, i| (y - y_pred[i]) ** 2 }.sum
 
       1 - (ss_residual / ss_total.to_f)
+    end
+
+    # Cross-validation method to evaluate model performance
+    def cross_validate(x_values: nil, y_values: nil, dataset: nil, feature_columns: nil, target_column: nil, k: 5)
+      if dataset
+        # Extract feature and target columns from the dataset
+        feature_indices = feature_columns.map { |col| dataset.headers.index(col) }
+        target_index = dataset.headers.index(target_column)
+    
+        x_values = dataset.data.map { |row| feature_indices.map { |i| row[i] } }
+        y_values = dataset.data.map { |row| row[target_index] }
+      end
+    
+      raise "Input arrays must have the same length" unless x_values.length == y_values.length
+    
+      fold_size = x_values.length / k
+      errors = []
+
+      k.times do |i|
+        test_start = i * fold_size
+        test_end = test_start + fold_size
+
+        x_train = x_values[0...test_start] + x_values[test_end..-1]
+        y_train = y_values[0...test_start] + y_values[test_end..-1]
+
+        x_test = x_values[test_start...test_end]
+        y_test = y_values[test_start...test_end]
+
+        fit(x_values: x_train, y_values: y_train)
+        predictions = predict(x_test)
+
+        errors << mean_squared_error(y_test, predictions)
+      end
+
+      errors.sum / errors.size.to_f
     end
   end
 end

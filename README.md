@@ -338,6 +338,70 @@ and check the results with the following benchmark in Python:
 python3 benchmarks/employee_salary_prediction_benchmark.py
 ```
 
+### Cross-Validation
+
+Cross-validation is a powerful technique to evaluate the performance of your model by splitting your dataset into multiple folds. The model is trained on a subset of the data and tested on the remaining data, and this process is repeated multiple times. The final evaluation metric is the average of all the individual metrics across the folds.
+
+#### Example Usage with Raw Arrays
+
+```ruby
+# Require the necessary files
+require 'ml_ai'
+
+# Initialize the model with regularization
+model = MLAI::MultipleLinearRegression.new(regularization: 0.01)
+
+# Define the input data
+x_values = [
+  [1, 2],
+  [2, 3],
+  [3, 4],
+  [4, 5],
+  [5, 6]
+]
+y_values = [5, 7, 9, 11, 13]
+
+# Perform 3-fold cross-validation
+average_mse = model.cross_validate(x_values: x_values, y_values: y_values, k: 3)
+puts "Average Mean Squared Error across 3 folds: #{average_mse.round(4)}"
+```
+
+#### Example Using a CSV Dataset
+
+```ruby
+# Require the necessary files
+require 'ml_ai'
+
+# Create a Dataset from a CSV file
+dataset = MLAI::Dataset.new('path_to_your_dataset.csv')
+
+# Initialize the model with regularization
+model = MLAI::MultipleLinearRegression.new(regularization: 0.01)
+
+# Perform 3-fold cross-validation
+average_mse = model.cross_validate(dataset: dataset, feature_columns: ["Feature1", "Feature2"], target_column: "Target", k: 3)
+puts "Average Mean Squared Error across 3 folds: #{average_mse.round(4)}"
+```
+
+#### Example
+
+Here is an example closer to the real world. Imagine that we want to predict the energy consumption of a building based on its size, the number of occupants, and the number of computers it houses. We'll use the `MultipleLinearRegression` class with cross-validation.
+
+You can run this example here:
+
+```
+ruby examples/energy_consumption_prediction.rb
+```
+
+and check the results with the following benchmark in Python:
+
+```
+python3 benchmarks/energy_consumption_prediction_benchmark.py
+```
+
+### Dataset
+
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
