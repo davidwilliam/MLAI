@@ -35,11 +35,6 @@ module MLAI
         x_transpose = x_matrix.transpose
         regularization_matrix = Matrix.build(x_matrix.column_count) { |i, j| i == j ? @regularization : 0 }
         
-        # Debugging output to see matrices
-        puts "X^T * X:\n#{(x_transpose * x_matrix).inspect}"
-        puts "Regularization Matrix:\n#{regularization_matrix.inspect}"
-        puts "X^T * X + λI:\n#{(x_transpose * x_matrix + regularization_matrix).inspect}"
-        
         xtx = x_transpose * x_matrix + regularization_matrix
       
         begin
