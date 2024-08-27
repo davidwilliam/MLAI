@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors = ["David William Silva"]
   spec.email = ["contact@davidwsilva.com"]
 
-  spec.summary = "Algorithms for machine learning and artificial intelligence in Ruby."
+  spec.summary = "ML and AI algorithms in Ruby."
   spec.description = "Algorithms for machine learning and artificial intelligence in Ruby."
   spec.homepage = "https://github.com/davidwilliam/MLAI"
   spec.license = "MIT"
