@@ -12,4 +12,6 @@ gem 'minitest-reporters', '~> 1.4'
 
 gem "rubocop", "~> 1.21"
 
+gem "matrix", "~> 0.3.0"
+
 
