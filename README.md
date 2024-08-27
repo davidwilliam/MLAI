@@ -1,6 +1,18 @@
 # MLAI
 
-Algorithms for machine learning and artificial intelligence in Ruby.
+Algorithms for machine learning and artificial intelligence in [Ruby](https://www.ruby-lang.org/en/).
+
+To check this Ruby implementation, all features are implemented and benchmarked against [scikit-learn](https://scikit-learn.org/), a well-known library in [Python](https://www.python.org/) for machine learning.
+
+## Why?
+
+[Python](https://www.python.org/) is the go-to language for machine learning. But even if you don't plan to use it in production, if you are working with Ruby, you deserve to have ML/AI algorithms available in [Ruby](https://www.ruby-lang.org/en/). :) 
+
+I also know that many libraries are available in Ruby for machine learning and related areas. Here is a [curated list](https://github.com/arbox/machine-learning-with-ruby).
+
+Then why? I could name several reasons, but it will all come down to my interest in the computational challenges associated with machine learning and AI. There is no better way to identify, isolate, and inspect bottlenecks and opportunities for improvement and even the proposal of new ideas than to implement core functionalities from scratch. This will be true for most things in software: if you really want to have a deeper, more precise, and more comprehensive view of some resource, implement that resource yourself. 
+
+Plus, it is a lot of fun! 
 
 ## Installation
 
