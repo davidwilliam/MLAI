@@ -83,6 +83,49 @@ To check the Ruby implementation, run the Python benchmark using the same data:
 $ python benchmarks/simple_linear_regression_benchmark.py
 ```
 
+Example 4: Evaluation Metrics
+
+Fit a linear model, make predictions, and evaluate the model using common metrics like Mean Squared Error (MSE) and R-squared.
+
+```ruby
+require 'ml_ai'
+
+# Initialize the model
+model = MLAI::SimpleLinearRegression.new
+
+# Define the dataset
+x_values = [1, 2, 3, 4, 5]
+y_values = [2, 4, 5, 4, 5]
+
+# Fit the model to the data
+model.fit(x_values, y_values)
+
+# Make predictions
+predictions = model.predict(x_values)
+
+# Calculate evaluation metrics
+mse = model.mean_squared_error(y_values, predictions)
+r2 = model.r_squared(y_values, predictions)
+
+# Output the results
+puts "Predictions: #{predictions}"
+puts "Mean Squared Error: #{mse}"
+puts "R-squared: #{r2}"
+
+# Example output:
+# Predictions: [2.8, 3.4, 4.0, 4.6, 5.2]
+# Mean Squared Error: 0.48
+# R-squared: 0.6
+```
+
+### Benchmark
+
+To check the Ruby implementation, run the Python benchmark using the same data:
+
+```
+$ python benchmarks/evaluation_metrics.py
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
@@ -100,4 +143,3 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Code of Conduct
 
 Everyone interacting in the MlAi project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/ml_ai/blob/main/CODE_OF_CONDUCT.md).
-x
