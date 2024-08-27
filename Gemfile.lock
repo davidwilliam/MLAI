@@ -9,6 +9,7 @@ GEM
     ansi (1.5.0)
     ast (2.4.2)
     builder (3.3.0)
+    csv (3.3.0)
     json (2.7.2)
     language_server-protocol (3.17.0.3)
     matrix (0.3.1)
@@ -50,6 +51,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  csv (~> 3.0)
   matrix (~> 0.3.0)
   minitest (~> 5.16)
   minitest-reporters (~> 1.4)

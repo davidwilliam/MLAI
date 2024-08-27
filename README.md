@@ -14,27 +14,11 @@ If you use Bundler, add the following to your Gemfile:
 
 ## Usage
 
-The MLAI gem provides a SimpleLinearRegression class that allows you to easily fit a linear model to your data and make predictions. Below are three examples showcasing different use cases.
+### Simple Linear Regression
 
-Example 1: Basic Usage
-This example demonstrates a simple case with three data points, where the relationship between x and y is perfectly linear.
+The `SimpleLinearRegression` class in the `MLAI` gem allows you to fit a linear model with a single feature, make predictions, and evaluate the model using metrics like Mean Squared Error (MSE) and R-squared. Additionally, it now supports loading data directly from a CSV file using the `Dataset` class.
 
-```ruby
-require 'ml_ai'
-
-# Initialize the model
-model = MLAI::SimpleLinearRegression.new
-
-# Fit the model to the data
-model.fit([1, 2, 3], [2, 4, 6])
-
-# Make a prediction
-prediction = model.predict([4])
-puts prediction # Output: [8]
-```
-
-Example 2: Larger Dataset
-This example uses a larger dataset with 100 data points, demonstrating the model's ability to handle more data.
+### Using Raw Arrays
 
 ```ruby
 require 'ml_ai'
@@ -42,40 +26,36 @@ require 'ml_ai'
 # Initialize the model
 model = MLAI::SimpleLinearRegression.new
 
-# Generate a dataset with a linear relationship
-x_values = (1..100).to_a
-y_values = x_values.map { |x| 3 * x + 5 } 
+# Define the dataset with a single feature
+x_values = [1, 2, 3, 4, 5]
+y_values = [3, 5, 7, 9, 11]
 
 # Fit the model to the data
-model.fit(x_values, y_values)
+model.fit(x_values: x_values, y_values: y_values)
 
-# Make a prediction
-prediction = model.predict([150])
-puts prediction # Output: [455]
+# Make predictions on the original data
+predictions = model.predict(x_values)
+puts "Predictions: #{predictions}"
+# Output: Predictions: [3.0, 5.0, 7.0, 9.0, 11.0]
+
+# Make predictions on new data
+new_data = [6, 7]
+new_predictions = model.predict(new_data)
+puts "New Predictions: #{new_predictions}"
+# Output: New Predictions: [13.0, 15.0]
+
+# Calculate evaluation metrics
+mse = model.mean_squared_error(y_values, predictions)
+r2 = model.r_squared(y_values, predictions)
+
+puts "Mean Squared Error: #{mse}"
+# Output: Mean Squared Error: 0.0
+
+puts "R-squared: #{r2}"
+# Output: R-squared: 1.0
 ```
 
-Example 3: Handling Negative and Positive Values
-This example shows how the model works with both negative and positive values in the dataset.
-
-```ruby
-require 'ml_ai'
-
-# Initialize the model
-model = MLAI::SimpleLinearRegression.new
-
-# Define a dataset with negative and positive values
-x_values = [-10, -5, 0, 5, 10]
-y_values = x_values.map { |x| 2 * x - 3 }
-
-# Fit the model to the data
-model.fit(x_values, y_values)
-
-# Make a prediction
-prediction = model.predict([15])
-puts prediction # Output: [27]
-```
-
-### Benchmark
+#### Benchmark
 
 To check the Ruby implementation, run the Python benchmark using the same data:
 
@@ -83,7 +63,7 @@ To check the Ruby implementation, run the Python benchmark using the same data:
 $ python3 benchmarks/simple_linear_regression_benchmark.py
 ```
 
-Example 4: Evaluation Metrics
+### Evaluation Metrics
 
 Fit a linear model, make predictions, and evaluate the model using common metrics like Mean Squared Error (MSE) and R-squared.
 
