@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'matrix'
+require_relative 'dataset'
 
 module MLAI
   class MultipleLinearRegression
@@ -12,7 +13,30 @@ module MLAI
       @alpha = alpha # Regularization term
     end
 
-    def fit(x_values, y_values)
+    # Fit method accepts either x_values and y_values or a Dataset object with specified columns
+    def fit(x_values: nil, y_values: nil, dataset: nil, feature_columns: nil, target_column: nil)
+      if dataset
+        unless feature_columns && target_column
+          raise ArgumentError, "When using a Dataset, you must specify feature_columns and target_column"
+        end
+
+        # Extract indices of the specified columns
+        feature_indices = feature_columns.map { |col| dataset.headers.index(col) }
+        target_index = dataset.headers.index(target_column)
+
+        unless feature_indices.all? && target_index
+          raise ArgumentError, "Specified feature or target column does not exist in the dataset"
+        end
+
+        # Extract x and y values from the dataset
+        x_values = dataset.data.map { |row| feature_indices.map { |i| row[i] } }
+        y_values = dataset.data.map { |row| row[target_index] }
+      elsif x_values && y_values
+        # Use x_values and y_values directly
+      else
+        raise ArgumentError, "You must provide either x_values and y_values or a dataset with feature_columns and target_column"
+      end
+
       raise "Input arrays must have the same length" unless x_values.length == y_values.length
 
       # Convert x_values to a matrix and add a column of ones for the intercept

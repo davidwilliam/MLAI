@@ -1,5 +1,25 @@
-from sklearn.linear_model import LinearRegression
 import numpy as np
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+
+# Load data from CSV file
+csv_file_path = "data/simple_linear_regression_data.csv"
+data = pd.read_csv(csv_file_path)
+
+# Extract feature and target columns
+x_csv = data[['Feature']].values
+y_csv = data['Target'].values
+
+# Initialize the model and fit using the CSV data
+model_csv = LinearRegression().fit(x_csv, y_csv)
+
+# Make predictions on the same data
+predictions_csv = model_csv.predict(x_csv)
+print(f"CSV Dataset Predictions: {predictions_csv}")  # Output will match the Target column
+
+# Make a prediction on new data
+new_data_prediction = model_csv.predict([[6]])
+print(f"New Data Prediction from CSV: {new_data_prediction}")  # Example: [13.]
 
 # Example 1: Basic Usage
 x_basic = np.array([1, 2, 3]).reshape(-1, 1)
