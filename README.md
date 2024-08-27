@@ -141,6 +141,22 @@ To check the Ruby implementation, run the Python benchmark using the same data:
 $ python3 benchmarks/evaluation_metrics.py
 ```
 
+#### Example
+
+Here is an example closer to the real world. Imagine you're working in real estate and want to predict the price of a house based on its size. You've gathered data from various houses, including their sizes in square feet and their prices in thousands of dollars. You want to use this data to predict the price of new houses based on their size.
+
+You can run this example here:
+
+```
+ruby examples/house_price_prediction.rb
+```
+
+and check the results with the following benchmark in Python:
+
+```
+python3 benchmarks/house_price_prediction_benchmark.py
+```
+
 ### Multiple Linear Regression
 
 The `MultipleLinearRegression` class in the `MLAI` gem allows you to fit a linear model with multiple features, make predictions, and evaluate the model using metrics like Mean Squared Error (MSE) and R-squared. The class supports loading data directly from a CSV file using the `Dataset` class, as well as passing raw arrays directly.
