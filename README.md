@@ -80,7 +80,7 @@ puts prediction # Output: [27]
 To check the Ruby implementation, run the Python benchmark using the same data:
 
 ```
-$ python benchmarks/simple_linear_regression_benchmark.py
+$ python3 benchmarks/simple_linear_regression_benchmark.py
 ```
 
 Example 4: Evaluation Metrics
@@ -123,7 +123,69 @@ puts "R-squared: #{r2}"
 To check the Ruby implementation, run the Python benchmark using the same data:
 
 ```
-$ python benchmarks/evaluation_metrics.py
+$ python3 benchmarks/evaluation_metrics.py
+```
+
+Example 5: Multiple Linear Regression
+
+The `MultipleLinearRegression` class in the `MLAI` gem allows you to fit a linear model with multiple features, make predictions, and evaluate the model using metrics like Mean Squared Error (MSE) and R-squared.
+
+### Fitting a Model and Making Predictions
+
+```ruby
+require 'ml_ai'
+
+# Initialize the model
+model = MLAI::MultipleLinearRegression.new
+
+# Define the dataset with multiple features
+x_values = [
+  [1, 2],
+  [2, 3],
+  [3, 4],
+  [4, 5],
+  [5, 6]
+]
+y_values = [5, 7, 9, 11, 13]
+
+# Fit the model to the data
+model.fit(x_values, y_values)
+
+# Make predictions on the original data
+predictions = model.predict(x_values)
+puts "Predictions: #{predictions}"
+# Output: Predictions: [5, 7, 9, 11, 13]
+
+# Make predictions on new data
+new_data = [
+  [6, 7],
+  [7, 8]
+]
+new_predictions = model.predict(new_data)
+puts "New Predictions: #{new_predictions}"
+# Output: New Predictions: [15, 17]
+```
+
+Evaluating the model:
+
+```ruby
+# Calculate evaluation metrics
+mse = model.mean_squared_error(y_values, predictions)
+r2 = model.r_squared(y_values, predictions)
+
+puts "Mean Squared Error: #{mse}"
+# Output: Mean Squared Error: 0.0
+
+puts "R-squared: #{r2}"
+# Output: R-squared: 1.0
+```
+
+### Benchmark
+
+To check the Ruby implementation, run the Python benchmark using the same data:
+
+```
+$ python3 benchmarks/multiple_linear_regression.py
 ```
 
 ## Development
